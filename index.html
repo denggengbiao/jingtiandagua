@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>惊天大瓜</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+            position: relative;
+        }
+
+        .title {
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            font-size: 2em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            position: absolute;
+            white-space: nowrap;
+            animation: float 6s ease-in-out both;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+            font-weight: bold;
+            will-change: transform;
+        }
+
+        .heart {
+            position: absolute;
+            animation: heartAnim 1.5s ease-out forwards;
+            opacity: 0;
+            will-change: transform;
+        }
+
+        .click-heart {
+            position: absolute;
+            animation: heartBeat 0.8s ease-out forwards;
+            pointer-events: none;
+            filter: drop-shadow(0 0 5px #ff69b4);
+            z-index: 2;
+        }
+
+        @keyframes float {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 0) rotate(0deg) scale(0.8);
+            }
+            20% {
+                opacity: 1;
+                transform: translate(-50%, -20%) rotate(5deg) scale(1.1);
+            }
+            50% {
+                transform: translate(-50%, -80%) rotate(-5deg) scale(1);
+            }
+            80% {
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -150vh) rotate(10deg) scale(0.5);
+            }
+        }
+
+        @keyframes horizontalFloat {
+            0% {
+                transform: translateX(-100vw) rotate(0deg);
+            }
+            100% {
+                transform: translateX(100vw) rotate(360deg);
+            }
+        }
+
+        @keyframes heartAnim {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        @keyframes heartBeat {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            20% {
+                transform: translate(-50%, -50%) scale(1.5);
+            }
+            40% {
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            60% {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            80% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">惊天大瓜</h1>
+
+    <script>
+        function createRandomElement() {
+            // 创建字幕（5-15个）
+            const subtitleCount = Math.floor(Math.random() * 10) + 5;
+            for (let i = 0; i < subtitleCount; i++) {
+                const subtitle = document.createElement('div');
+                subtitle.className = 'subtitle';
+                subtitle.textContent = '陈思童第一大美女';
+                
+                // 随机动画类型
+                const isHorizontal = Math.random() > 0.5;
+                subtitle.style.animationName = isHorizontal ? 'horizontalFloat' : 'float';
+                
+                // 随机样式
+                subtitle.style.fontSize = `${Math.random() * 30 + 30}px`;
+                subtitle.style.color = `hsl(${Math.random() * 360}, 100%, 65%)`;
+                subtitle.style.animationDuration = `${Math.random() * 3 + 5}s`;
+                subtitle.style.animationDelay = `${Math.random() * 2}s`;
+                subtitle.style.left = isHorizontal ? '0%' : `${Math.random() * 80 + 10}%`;
+                subtitle.style.top = isHorizontal ? `${Math.random() * 100}%` : '100%';
+
+                document.body.appendChild(subtitle);
+            }
+
+            // 创建随机爱心（5-20个）
+            const heartCount = Math.floor(Math.random() * 15) + 5;
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤';
+                
+                heart.style.left = Math.random() * 95 + '%';
+                heart.style.top = Math.random() * 95 + '%';
+                heart.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+                heart.style.fontSize = `${Math.random() * 30 + 20}px`;
+                heart.style.animationDelay = `${Math.random() * 2}s`;
+                heart.style.animationDuration = `${Math.random() * 1 + 1}s`;
+                
+                document.body.appendChild(heart);
+            }
+
+            // 8秒后清理元素
+            setTimeout(() => {
+                document.querySelectorAll('.subtitle, .heart').forEach(el => el.remove());
+                requestAnimationFrame(createRandomElement);
+            }, 8000);
+        }
+
+        // 点击爱心生成
+        function createClickHeart(e) {
+            const x = e.clientX || e.touches[0].clientX;
+            const y = e.clientY || e.touches[0].clientY;
+
+            const heart = document.createElement('div');
+            heart.className = 'click-heart';
+            heart.innerHTML = '❤';
+            heart.style.color = '#ff69b4';
+            heart.style.fontSize = '48px';
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+
+            heart.addEventListener('animationend', () => heart.remove());
+            document.body.appendChild(heart);
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', createRandomElement);
+        document.addEventListener('click', createClickHeart);
+        document.addEventListener('touchstart', createClickHeart);
+        
+        // 窗口重置
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.subtitle, .heart').forEach(el => el.remove());
+            createRandomElement();
+        });
+    </script>
+</body>
+</html>
